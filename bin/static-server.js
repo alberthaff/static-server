@@ -8,6 +8,7 @@ const DEFAULT_ERROR_404 = undefined;
 const DEFAULT_CORS = undefined;
 const DEFAULT_CACHE = true;
 const DEFAULT_OPEN = false;
+const DEFAULT_SILENT = false;
 
 
 var path    = require("path");
@@ -42,7 +43,7 @@ program
   .option('-c, --cors <pattern>', 'Cross Origin Pattern. Use "*" to allow all origins', DEFAULT_CORS)
   .option('-z, --no-cache', 'disable cache (http 304) responses', DEFAULT_CACHE)
   .option('-o, --open', 'open server in the local browser', DEFAULT_OPEN)
-  .option('-s, --silent', 'Run the server in silent-mode', activateSilentMode, DEFAULT_OPEN)
+  .option('-s, --silent', 'Run the server in silent-mode', activateSilentMode, DEFAULT_SILENT)
   .parse(process.argv);
 ;
 
