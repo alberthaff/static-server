@@ -25,6 +25,10 @@ var templates = {
   index: 'index.html'
 };
 
+var flags = {
+  silent: false,
+}
+
 initTerminateHandlers();
 
 program
@@ -38,6 +42,7 @@ program
   .option('-c, --cors <pattern>', 'Cross Origin Pattern. Use "*" to allow all origins', DEFAULT_CORS)
   .option('-z, --no-cache', 'disable cache (http 304) responses', DEFAULT_CACHE)
   .option('-o, --open', 'open server in the local browser', DEFAULT_OPEN)
+  .option('-s, --silent', 'Run the server in silent-mode', activateSilentMode, DEFAULT_OPEN)
   .parse(process.argv);
 ;
 
@@ -68,21 +73,22 @@ server.on('response', function (req, res, err, file, stat) {
   var relFile;
   var nrmFile;
 
-  if (res.status >= 400) {
-    console.log(chalk.gray('-->'), chalk.red(res.status), req.path, '(' + req.elapsedTime + ')');
-  } else if (file) {
-    relFile = path.relative(server.rootPath, file);
-    nrmFile = path.normalize(req.path.substring(1));
+  if (!flags.silent) {
+    if (res.status >= 400) {
+      console.log(chalk.gray('-->'), chalk.red(res.status), req.path, '(' + req.elapsedTime + ')');
+    } else if (file) {
+      relFile = path.relative(server.rootPath, file);
+      nrmFile = path.normalize(req.path.substring(1));
 
-    console.log(chalk.gray('-->'), chalk.green(res.status, StaticServer.STATUS_CODES[res.status]), req.path + (nrmFile !== relFile ? (' ' + chalk.dim('(' + relFile + ')')) : ''), fsize(stat.size).human(), '(' + req.elapsedTime + ')');
-  } else {
-    console.log(chalk.gray('-->'), chalk.green.dim(res.status, StaticServer.STATUS_CODES[res.status]), req.path, '(' + req.elapsedTime + ')');
+      console.log(chalk.gray('-->'), chalk.green(res.status, StaticServer.STATUS_CODES[res.status]), req.path + (nrmFile !== relFile ? (' ' + chalk.dim('(' + relFile + ')')) : ''), fsize(stat.size).human(), '(' + req.elapsedTime + ')');
+    } else {
+      console.log(chalk.gray('-->'), chalk.green.dim(res.status, StaticServer.STATUS_CODES[res.status]), req.path, '(' + req.elapsedTime + ')');
+    }
+
+    if (err && server.debug) {
+      console.error(err.stack || err.message || err);
+    }
   }
-
-  if (err && server.debug) {
-    console.error(err.stack || err.message || err);
-  }
-
 });
 
 
@@ -128,4 +134,8 @@ function addNotFoundTemplate(v){
 
 function addIndexTemplate(v){
   templates.index = v;
+}
+
+function activateSilentMode (v){
+  flags.silent = true;
 }
