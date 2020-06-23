@@ -20,7 +20,10 @@ var pkg     = require(path.join(__dirname, '..', 'package.json'));
 var StaticServer = require('../server.js');
 var server;
 
-var templates = {};
+var templates = {
+  notFound: 'index.html',
+  index: 'index.html'
+};
 
 initTerminateHandlers();
 
