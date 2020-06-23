@@ -78,7 +78,7 @@ function StaticServer(options) {
   this.followSymlink = !!options.followSymlink;
   this.templates = {
     'index': (options.templates.index || DEFAULT_INDEX),
-    'notFound': options.templates.notFound
+    'notFound': options.rootPath + '/' + options.templates.notFound
   };
   // the arguments parser converts `--no-XXXX` to `XXXX` with a value of false;
   this.noCache = !options.cache;
