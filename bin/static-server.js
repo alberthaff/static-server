@@ -62,7 +62,9 @@ server.start(function () {
 });
 
 server.on('request', function (req, res) {
-  console.log(chalk.gray('<--'), chalk.blue('[' + req.method + ']'), req.path);
+  if (!flags.silent) {
+    console.log(chalk.gray('<--'), chalk.blue('[' + req.method + ']'), req.path);
+  }
 });
 
 server.on('symbolicLink', function (link, file) {
